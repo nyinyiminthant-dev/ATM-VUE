@@ -1,7 +1,8 @@
+import type LoginView from '@/modules/Login/LoginView.vue';
 import * as products from './products';
 
 class API {
-	products: typeof products;
+	products: typeof LoginView;
 
 	constructor() {
 		this.products = products;

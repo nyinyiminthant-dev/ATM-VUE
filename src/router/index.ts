@@ -1,4 +1,6 @@
 import DefaultLayout from '@/layout/DefaultLayout.vue'
+import ATMView from '@/modules/ATM/ATMView.vue'
+import BankView from '@/modules/Bank/BankView.vue'
 import HomeView from '@/modules/home/HomeView.vue'
 import LoginView from '@/modules/Login/LoginView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
@@ -12,15 +14,26 @@ const router = createRouter({
       component: DefaultLayout,
       children: [
         {
+          name: 'atm',
+          path: '/atm',
+          component: ATMView
+        },
+
+        {
           name: 'home',
-          path: '/home',
+          path: '',
           component: HomeView
         },
 
         {
           name: 'login',
-          path: '',
+          path: '/login',
           component: LoginView
+        },
+        {
+          name: 'bank',
+          path: '/bank',
+          component: BankView
         }
       ]
     }

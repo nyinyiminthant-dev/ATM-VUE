@@ -1,34 +1,44 @@
-import axios from "axios";
-import type { AxiosResponse, InternalAxiosRequestConfig } from "axios";
+import axios from 'axios'
+import Cookies from 'js-cookie'
 
-axios.defaults.baseURL = 'https://dummyjson.com/';
+export type APIResponse<T> = {
+    message: string
+    status: number
+    data: T
+}
 
-// Add a request interceptor
-axios.interceptors.request.use(
-  (config: InternalAxiosRequestConfig) => {
-    const token = localStorage.getItem('token'); // Assuming the token is stored in localStorage
-    if (token) {
-      config.headers!.Authorization = `Bearer ${token}`;
+const axiosInstance = axios.create({
+    baseURL: 'https://localhost:7248/api/',
+    // timeout: 10000, // Optional: Set a timeout for requests (in milliseconds)
+    headers: {
+        'Content-Type': 'application/json'
     }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
+    // Add more default configurations if needed
+})
 
-// Add a response interceptor
-axios.interceptors.response.use(
-  (response: AxiosResponse) => {
-    return response;
-  },
-  (error) => {
-    if (error.response && error.response.status === 401) {
-      // Redirect to login page if unauthorized
-      window.location.href = '/login';
+// Interceptors can be added to handle requests and responses globally
+axiosInstance.interceptors.request.use(
+    (config) => {
+        const token = Cookies.get('template-app-token')
+        if (token) {
+            config.headers['Authorization'] = `Bearer ${token}`
+        }
+
+        // Add authorization or other headers if needed
+        return config
+    },
+    (error) => {
+        return Promise.reject(error)
     }
-    return Promise.reject(error);
-  }
-);
+)
 
-export default axios;
+axiosInstance.interceptors.response.use(
+    (response) => {
+        return response
+    },
+    (error) => {
+        return Promise.reject(error)
+    }
+)
+
+export default axiosInstance
